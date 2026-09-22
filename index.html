@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,8 @@
         body { 
             font-family: Arial, sans-serif; 
             text-align: center; 
-            background: #1a1a1a; 
-            color: white; 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
             margin: 0;
             padding: 40px 20px;
         }
@@ -39,20 +40,21 @@
 <body>
 
     <div class="card">
-        <h1 id="welcome-title">Bienvenue dans The Game !</h1>
-        <h3 id="user-info">Pays : CM | Devise : FCFA</h3>
+        <h1 id="welcome-title">Welcome to The Game!</h1>
+        <h3 id="user-info">Country: CM | Currency: FCFA</h3>
     </div>
 
     <div style="max-width: 400px; margin: 0 auto;">
-        <button id="btn-play" class="btn btn-play" onclick="alert('Partie lancée !')">Jouer</button>
-        <button id="btn-shop" class="btn btn-shop" onclick="alert('Boutique ouverte !')">Acheter 100 Pièces (3 000 FCFA)</button>
+        <button id="btn-play" class="btn btn-play" onclick="alert('Game Started!')">Play</button>
+        <button id="btn-shop" class="btn btn-shop" onclick="alert('Shop Opened!')">Buy 100 Coins (3,000 FCFA)</button>
     </div>
 
     <script>
+        // Detection simple sans dependance externe
         async function initGame() {
             let country = "CM";
             let currency = "FCFA";
-            let price = "3 000 FCFA";
+            let price = "3,000 FCFA";
 
             try {
                 const res = await fetch('https://ipapi.co/json/');
@@ -61,18 +63,18 @@
                     country = data.country_code || "CM";
                     if (country === "FR" || country === "DE") {
                         currency = "EUR";
-                        price = "4,99 €";
+                        price = "4.99 €";
                     } else if (country === "US") {
                         currency = "USD";
                         price = "$4.99";
                     }
                 }
             } catch (e) {
-                console.log("Géolocalisation indisponible, fallback par défaut.");
+                console.log("IP API non disponible, utilisation des valeurs par defaut.");
             }
 
-            document.getElementById('user-info').innerText = "Pays : " + country + " | Devise : " + currency;
-            document.getElementById('btn-shop').innerText = "Acheter 100 Pièces (" + price + ")";
+            document.getElementById('user-info').innerText = "Country: " + country + " | Currency: " + currency;
+            document.getElementById('btn-shop').innerText = "Buy 100 Coins (" + price + ")";
         }
 
         window.onload = initGame;
