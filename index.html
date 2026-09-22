@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Game</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background: #1a1a1a; 
+            color: white; 
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .btn { 
+            display: block;
+            width: 100%;
+            padding: 15px 0; 
+            font-size: 18px; 
+            font-weight: bold;
+            margin: 12px 0; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 8px; 
+        }
+        .btn-play { background: #28a745; color: white; }
+        .btn-shop { background: #007bff; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1 id="welcome-title">Welcome to The Game!</h1>
+        <h3 id="user-info">Country: CM | Currency: FCFA</h3>
+    </div>
+
+    <div style="max-width: 400px; margin: 0 auto;">
+        <button id="btn-play" class="btn btn-play">Play</button>
+        <button id="btn-shop" class="btn btn-shop">Buy 100 Coins (3,000 XAF)</button>
+    </div>
+
+    <script src="thegame.js"></script>
+
+    <script>
+        function updateUI() {
+            if (typeof gameInstance !== 'undefined' && gameInstance.user) {
+                document.getElementById('welcome-title').innerText = gameInstance.user.getText('welcome');
+                document.getElementById('user-info').innerText = `Country: ${gameInstance.user.country} | Currency: ${gameInstance.user.currencyInfo.symbol}`;
+                document.getElementById('btn-play').innerText = gameInstance.user.getText('play');
+                document.getElementById('btn-shop').innerText = `${gameInstance.user.getText('buy_coins')} (${gameInstance.user.formatPrice(4.99)})`;
+            }
+        }
+
+        window.addEventListener('load', updateUI);
+        setTimeout(updateUI, 500);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW Ready'))
+                    .catch(err => console.log('SW Error', err));
+            });
+        }
+    </script>
+</body>
+</html>
