@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Game</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a1a">
-
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -43,41 +39,43 @@
 <body>
 
     <div class="card">
-        <h1 id="welcome-title">Welcome to The Game!</h1>
-        <h3 id="user-info">Country: CM | Currency: FCFA</h3>
+        <h1 id="welcome-title">Bienvenue dans The Game !</h1>
+        <h3 id="user-info">Pays : CM | Devise : FCFA</h3>
     </div>
 
     <div style="max-width: 400px; margin: 0 auto;">
-        <button id="btn-play" class="btn btn-play">Play</button>
-        <button id="btn-shop" class="btn btn-shop">Buy 100 Coins (3,000 FCFA)</button>
+        <button id="btn-play" class="btn btn-play" onclick="alert('Partie lancée !')">Jouer</button>
+        <button id="btn-shop" class="btn btn-shop" onclick="alert('Boutique ouverte !')">Acheter 100 Pièces (3 000 FCFA)</button>
     </div>
 
-    <script src="thegame.js"></script>
-
     <script>
-        function updateUI() {
+        async function initGame() {
+            let country = "CM";
+            let currency = "FCFA";
+            let price = "3 000 FCFA";
+
             try {
-                if (typeof gameInstance !== 'undefined' && gameInstance.user) {
-                    document.getElementById('welcome-title').innerText = gameInstance.user.getText('welcome');
-                    document.getElementById('user-info').innerText = 'Country: ' + gameInstance.user.country + ' | Currency: ' + gameInstance.user.currencyInfo.symbol;
-                    document.getElementById('btn-play').innerText = gameInstance.user.getText('play');
-                    document.getElementById('btn-shop').innerText = gameInstance.user.getText('buy_coins') + ' (' + gameInstance.user.formatPrice(4.99) + ')';
+                const res = await fetch('https://ipapi.co/json/');
+                if (res.ok) {
+                    const data = await res.json();
+                    country = data.country_code || "CM";
+                    if (country === "FR" || country === "DE") {
+                        currency = "EUR";
+                        price = "4,99 €";
+                    } else if (country === "US") {
+                        currency = "USD";
+                        price = "$4.99";
+                    }
                 }
-            } catch (err) {
-                console.log('UI update error:', err);
+            } catch (e) {
+                console.log("IP API non disponible");
             }
+
+            document.getElementById('user-info').innerText = "Pays : " + country + " | Devise : " + currency;
+            document.getElementById('btn-shop').innerText = "Acheter 100 Pièces (" + price + ")";
         }
 
-        window.addEventListener('load', updateUI);
-        setTimeout(updateUI, 500);
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(function(reg) { console.log('SW Ready'); })
-                    .catch(function(err) { console.log('SW Error', err); });
-            });
-        }
+        window.onload = initGame;
     </script>
 </body>
 </html>
