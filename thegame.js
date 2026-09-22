@@ -1,6 +1,6 @@
 class UserConfig {
     constructor() {
-        this.country = 'CM'; // Default country
+        this.country = 'CM';
         this.language = 'en';
         this.currencyInfo = { symbol: 'FCFA', rate: 600 };
         this.detectLocation();
